@@ -926,11 +926,7 @@ get_type_candidate(X, T) :- match('&self', [':',X,T], T, _).
 'readln!'(Out) :- read_line_to_string(user_input, Str),
                   sread(Str, Out).
 
-test(A,B,true) :- (A =@= B -> E = '✅' ; E = '❌'),
-                  swrite(A, RA),
-                  swrite(B, RB),
-                  format("is ~w, should ~w. ~w ~n", [RA, RB, E]),
-                  (A =@= B -> true ; halt(1)).
+test(A,B,true) :- (A =@= B -> true ; halt(1)).
 
 assert(Goal, true) :- ( call(Goal) -> true
                                     ; swrite(Goal, RG),

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PeTTa Playground â€” Browser-based MeTTa execution via SWI-Prolog WASM
  */
 
@@ -405,8 +405,8 @@ async function initPeTTa() {
 
         setLoadingStep("Loading PeTTa language runtime...", 50);
 
-        // Fetch the PeTTa bundle
-        const response = await fetch("petta_bundle.pl");
+        // Fetch the PeTTa bundle (with cache bypass so it always gets the latest version)
+        const response = await fetch("petta_bundle.pl?t=" + new Date().getTime());
         if (!response.ok) {
             throw new Error(`Failed to load petta_bundle.pl: ${response.status}`);
         }
