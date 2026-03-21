@@ -926,7 +926,7 @@ get_type_candidate(X, T) :- match('&self', [':',X,T], T, _).
 'readln!'(Out) :- read_line_to_string(user_input, Str),
                   sread(Str, Out).
 
-test(A,B,true) :- (A =@= B -> true ; halt(1)).
+test(A,B,true) :- (A =@= B -> true ; throw(error(test_failed(A, B), _))).
 
 assert(Goal, true) :- ( call(Goal) -> true
                                     ; swrite(Goal, RG),
