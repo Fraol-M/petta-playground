@@ -331,7 +331,13 @@ async function runCode() {
                         return;
                     }
 
-                    appendOutput(output, "result");
+                    const lines = output.split('\n');
+                    for (const line of lines) {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine) {
+                            appendOutput(trimmedLine, "result");
+                        }
+                    }
                     elements.outputBadge.className = "output-badge success";
                     elements.outputBadge.textContent = "Done";
                 } else if (!hadStreamOutput) {

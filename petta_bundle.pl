@@ -1044,7 +1044,8 @@ register_fun(N) :- (fun(N) -> true ; assertz(fun(N))).
 metta_exec(Input, Output) :-
     catch(
         (process_metta_string(Input, Results),
-         swrite(Results, Output)),
+         maplist(swrite, Results, StringList),
+         atomic_list_concat(StringList, '\n', Output)),
         Error,
         (term_to_atom(Error, Output)
     )).
