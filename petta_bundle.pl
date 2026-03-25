@@ -4,6 +4,8 @@
 
 :- assertz(silent(true)).
 :- assertz(working_dir("/")).
+:- dynamic user_space/1.
+:- dynamic user_state_var/1.
 
 %% ======== parser.pl ========
 :- use_module(library(dcg/basics)). %blanks/0, number/1, string_without/2
@@ -181,7 +183,21 @@ invalidate_specializations(F) :-
 
 %% ======== spaces.pl ========
 %Since both normal add-attom call and function additions needs to add the S-expression:
+remember_user_space('&self') :- !.
+remember_user_space(Space) :- atom(Space), !,
+                              ( user_space(Space) -> true ; assertz(user_space(Space)) ).
+remember_user_space(_).
+
+clear_user_space(Space) :- forall(current_predicate(Space/Arity),
+                                  ( functor(Head, Space, Arity),
+                                    retractall(Head),
+                                    catch(abolish(Space, Arity), _, true) )).
+
+clear_user_spaces :- forall(user_space(Space), clear_user_space(Space)),
+                     retractall(user_space(_)).
+
 add_sexp(Space, [Rel|Args]) :- Term =.. [Space, Rel | Args],
+                               remember_user_space(Space),
                                assertz(Term).
 
 %Same but for removal:
@@ -960,7 +976,15 @@ assert(Goal, true) :- ( call(Goal) -> true
 
 %%% States: %%%
 'bind!'(A, ['new-state', B], C) :- 'change-state!'(A, B, C).
-'change-state!'(Var, Value, true) :- nb_setval(Var, Value).
+remember_state_var(Var) :- atom(Var), !,
+                           ( user_state_var(Var) -> true ; assertz(user_state_var(Var)) ).
+remember_state_var(_).
+
+clear_user_state_vars :- forall(user_state_var(Var), catch(nb_delete(Var), _, true)),
+                         retractall(user_state_var(_)).
+
+'change-state!'(Var, Value, true) :- nb_setval(Var, Value),
+                                     remember_state_var(Var).
 'get-state'(Var, Value) :- nb_getval(Var, Value).
 
 %%% Eval: %%%
@@ -1041,14 +1065,31 @@ register_fun(N) :- (fun(N) -> true ; assertz(fun(N))).
 
 %% ======== WASM Browser Wrapper ========
 
-metta_exec(Input, Output) :-
+reset_metta_state :-
+    retractall('&self'(_, _, _)),
+    retractall('&self'(_, _)),
+    retractall('&self'(_)),
+    ( current_predicate(translated_from/2)
+      -> forall(translated_from(Ref, _), erase(Ref))
+       ; true ),
+    clear_user_spaces,
+    clear_user_state_vars,
+    retractall(user_atom(_, _)),
+    retractall(ho_specialization(_, _)),
+    retractall(translated_from(_, _)),
+    nb_setval(lambda_counter, 0).
+
+metta_exec(Input, ResultTerm) :-
     catch(
         (process_metta_string(Input, Results),
          maplist(swrite, Results, StringList),
-         atomic_list_concat(StringList, '\n', Output)),
+         atomic_list_concat(StringList, '\n', OutputString),
+         ResultTerm = result(OutputString, none)),
         Error,
-        (term_to_atom(Error, Output)
-    )).
+        (term_to_atom(Error, EStr),
+         ResultTerm = result('', EStr)
+        )
+    ).
 
 metta_run(Input) :-
     catch(

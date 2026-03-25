@@ -76,24 +76,7 @@
                     </div>
                 </div>
             </div>
-            <div class="editor-container">
-                <div class="line-numbers" id="lineNumbers">1</div>
-                <textarea 
-                    id="codeEditor" 
-                    class="code-editor" 
-                    spellcheck="false" 
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    placeholder="Type your MeTTa code here..."
-                >; Welcome to PeTTa Playground!
-; Try running this simple example:
-
-(= (square $x) (* $x $x))
-
-!(square 5)
-!(+ 10 20)
-!(test (square 3) 9)</textarea>
+            <div class="editor-container" id="editor">
             </div>
         </section>
 
@@ -114,7 +97,14 @@
                 </svg>
                 <span>Clear Output</span>
             </button>
-            <div class="controls-spacer"></div>
+            <div class="controls-spacer">
+                <div class="theme-select-wrapper" style="margin-left: 12px; display: inline-block;">
+                    <select id="themeSelect" class="example-select">
+                        <option value="dark" selected>Dark Theme</option>
+                        <option value="light">Light Theme</option>
+                    </select>
+                </div>
+            </div>
             <div class="execution-time" id="executionTime"></div>
         </div>
 
@@ -165,9 +155,7 @@
         </div>
     </div>
 
-    <!-- SWI-Prolog WASM -->
-    <script src="https://SWI-Prolog.github.io/npm-swipl-wasm/latest/index.js"></script>
     <!-- App -->
-    <script src="app.js"></script>
+    <script type="module" src="/src/app.js"></script>
 </body>
 </html>

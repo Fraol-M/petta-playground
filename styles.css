@@ -54,6 +54,26 @@
     --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+body.light-theme {
+    /* Background */
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --bg-panel: rgba(255, 255, 255, 0.9);
+    --bg-panel-hover: rgba(255, 255, 255, 1);
+    
+    /* Text */
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-tertiary: #475569;
+    --text-muted: #64748b;
+    
+    /* Borders */
+    --border-primary: rgba(99, 102, 241, 0.5);
+    --border-secondary: rgba(0, 0, 0, 0.1);
+    --border-hover: rgba(99, 102, 241, 0.8);
+}
+
 /* ===== Reset & Base ===== */
 *, *::before, *::after {
     margin: 0;
@@ -319,50 +339,44 @@ body {
     display: flex;
     overflow: hidden;
     position: relative;
-}
-
-.line-numbers {
-    padding: var(--space-md) var(--space-sm);
-    padding-right: var(--space-md);
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    line-height: 1.6;
-    color: var(--text-muted);
-    text-align: right;
-    user-select: none;
-    overflow: hidden;
-    width: 48px;
-    min-width: 48px;
-    flex-shrink: 0;
-    white-space: pre;
-    background: rgba(255, 255, 255, 0.01);
-    border-right: 1px solid var(--border-secondary);
-}
-
-.code-editor {
-    flex: 1;
-    min-width: 0;
-    padding: var(--space-md);
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    line-height: 1.6;
-    color: var(--text-primary);
     background: transparent;
-    border: none;
-    outline: none;
-    resize: none;
-    tab-size: 4;
-    -moz-tab-size: 4;
-    overflow: auto;
-    white-space: pre;
-    word-wrap: normal;
-    overflow-wrap: normal;
-    caret-color: var(--accent-primary);
 }
 
-.code-editor::placeholder {
-    color: var(--text-muted);
+.editor-container .cm-editor {
+    height: 100%;
+    width: 100%;
 }
+.editor-container .cm-scroller {
+    overflow: auto;
+    font-family: var(--font-mono);
+}
+
+.drag-handle {
+    position: fixed;
+    top: calc(77px + var(--space-md));
+    bottom: var(--space-md);
+    width: 12px;
+    margin-left: -6px;
+    z-index: 50;
+    cursor: col-resize;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.drag-handle::after {
+    content: '';
+    width: 4px;
+    height: 30px;
+    background: var(--border-secondary);
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.drag-handle:hover::after, .drag-handle:active::after {
+    background: var(--accent-primary);
+}
+
+/* removed code-editor and line-numbers styles */
 
 /* ===== Examples Select ===== */
 .example-select-wrapper {
@@ -683,7 +697,7 @@ body {
 /* ===== Responsive ===== */
 @media (min-width: 900px) {
     .main-content {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: calc(50% - var(--space-md)/2) calc(50% - var(--space-md)/2);
         grid-template-rows: 1fr auto;
         gap: var(--space-md);
     }

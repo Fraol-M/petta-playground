@@ -1,0 +1,33 @@
+{
+  "name": "petta-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fraol-M/petta-playground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Fraol-M/petta-playground/issues"
+  },
+  "homepage": "https://github.com/Fraol-M/petta-playground#readme",
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.1",
+    "@codemirror/language": "^6.12.3",
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/view": "^6.40.0",
+    "@lezer/highlight": "^1.2.3",
+    "codemirror": "^6.0.2",
+    "swipl-wasm": "^7.0.5",
+    "vite": "^8.0.2"
+  }
+}
