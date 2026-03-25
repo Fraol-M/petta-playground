@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: '/petta-playground/', // Added for GitHub pages
   server: {
     port: 3000,
     headers: {
